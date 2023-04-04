@@ -24,7 +24,7 @@ struct Broom: ParsableCommand {
         // Pass an array to `subcommands` to set up a nested tree of subcommands.
         // With language support for type-level introspection, this could be
         // provided by automatically finding nested `ParsableCommand` types.
-        subcommands: [Scan.self, Config.self],
+        subcommands: [Scan.self, Config.self, Show.self],
 
         // A default subcommand, when provided, is automatically selected if a
         // subcommand is not given on the command line.
@@ -49,28 +49,34 @@ extension Broom {
         @Option(name: .shortAndLong, help: "Exclude folders, like Pods|Others")
         var excludeFolders: String?
         
-        @Option(name: .shortAndLong, help: "OutPut as json file")
+        @Option(name: .shortAndLong, help: "Output as json file")
         var outputPath: String?
+        
+        @Option(help: "Scan Project")
+        var project: String?
 
         mutating func run() {
-            
+            guard let project = project else {
+                fatalError("Project is Empty")
+            }
             if let suffixs = suffixs {
-                BroomManager.config(suffixs: suffixs)
+                BroomManager.config(suffixs: suffixs, project: project)
             }
             
             if let projectPath = projectPath {
-                BroomManager.config(projectPath: projectPath)
+                BroomManager.config(projectPath: projectPath, project: project)
             }
             
             if let excludeFolders = excludeFolders {
-                BroomManager.config(excludeFolders: excludeFolders)
+                BroomManager.config(excludeFolders: excludeFolders, project: project)
             }
             
-            let unused = BroomManager.run().compactMap { fileInfo -> [String : Any] in
+            let unused = BroomManager.run(project: project).compactMap { fileInfo -> [String : Any] in
                 var info: [String : Any] = [:]
                 info["file_name"] = fileInfo.name
                 info["file_size"] = fileInfo.fileSize
                 info["file_path"] = fileInfo.path
+                
                 return info
             }
             
@@ -83,7 +89,7 @@ extension Broom {
                 do {
                     
                     let data = try JSONSerialization.data(withJSONObject: unused,
-                                                          options: [])
+                                                          options: .withoutEscapingSlashes)
                     FileManager.default.createFile(atPath: outputPath, contents: data)
 
 
@@ -94,17 +100,14 @@ extension Broom {
                 
             } else {
                 do {
-                    let data = try JSONSerialization.data(withJSONObject: unused,
-                                                          options: [])
+                    let data = try JSONSerialization.data(withJSONObject: unused as Any, options: .withoutEscapingSlashes)
                     let infoStr = String(data: data, encoding: String.Encoding.utf8)
                     print(infoStr ?? "")
+
                 } catch let error {
                     fatalError(error.localizedDescription)
                 }
             }
-            
-            
-            
         }
     }
 
@@ -121,20 +124,44 @@ extension Broom {
         
         @Option(name: .shortAndLong, help: "Exclude folders, like Pods|Others")
         var excludeFolders: String?
+        
+        @Option(help: "Scan Project")
+        var project: String?
 
         mutating func run() {
             
-            if let suffixs = suffixs {
-                BroomManager.config(suffixs: suffixs)
+            guard let project = project else {
+                fatalError("Project is Empty")
+            }
+            if let projectPath = projectPath {
+                BroomManager.config(projectPath: projectPath, project: project)
             }
             
-            if let projectPath = projectPath {
-                BroomManager.config(projectPath: projectPath)
+            if let suffixs = suffixs {
+                BroomManager.config(suffixs: suffixs, project: project)
             }
             
             if let excludeFolders = excludeFolders {
-                BroomManager.config(excludeFolders: excludeFolders)
+                BroomManager.config(excludeFolders: excludeFolders, project: project)
             }
+            
+        }
+    }
+    
+    struct Show: ParsableCommand {
+        
+        @Option(help: "Scan Project")
+        var project: String?
+
+        mutating func run() {
+            
+            guard let project = project else {
+                fatalError("Project is Empty")
+            }
+            print("Project: \(project)")
+            print("Project Path: \(ResourceSettings.shared.getProjectPath(about: project) ?? "")")
+            print("Resource suffixs: \(ResourceSettings.shared.getResourceSuffixs(about: project) ?? [])")
+            print("Exclude folders: \(ResourceSettings.shared.getExcludeFolders(about: project) ?? [])")
             
         }
     }

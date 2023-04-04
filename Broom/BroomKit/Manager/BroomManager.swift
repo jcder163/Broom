@@ -13,50 +13,51 @@ class BroomManager {
     
     /// 配置资源后缀以｜分割
     /// - Parameter suffixs: 默认“imageset|jpg|gif|png|pdf”
-    static func config(suffixs: String) {
+    static func config(suffixs: String, project: String) {
         // 后缀转换成小写，方便后面使用
         var suffixs = suffixs.lowercased()
         // 去掉 空格 和 .
         suffixs = suffixs.replacingOccurrences(of: " ", with: "")
         suffixs = suffixs.replacingOccurrences(of: ".", with: "")
         // 配置需要扫描的后缀
-        ResourceSettings.shared.resourceSuffixs = suffixs.components(separatedBy: kDefaultResourceSeparator)
+        let resourceSuffixs = suffixs.components(separatedBy: kDefaultResourceSeparator)
+        ResourceSettings.shared.setResourceSuffixs(resourceSuffixs, for: project)
         // 根据后缀创建正则
-        let resourcePatterns = ResourceStringSeacher.shared.createDefaultResourcePatterns(with: ResourceSettings.shared.resourceSuffixs ?? [])
+        let resourcePatterns = ResourceStringSeacher.shared.createDefaultResourcePatterns(with: resourceSuffixs)
         // 配置扫描规则
-        ResourceSettings.shared.resourcePatterns = resourcePatterns
+        ResourceSettings.shared.setResourcePatterns(resourcePatterns, for: project)
     }
     
     /// 配置项目地址
     /// - Parameter projectPath: 项目路径
-    static func config(projectPath: String) {
-        ResourceSettings.shared.projectPath = projectPath
+    static func config(projectPath: String, project: String) {
+        ResourceSettings.shared.setProjectPath(projectPath, for: project)
     }
     
     /// 配置忽略文件夹，多文件夹以“｜”分割
     /// - Parameter excludeFolders: 默认为空
-    static func config(excludeFolders: String) {
-        ResourceSettings.shared.excludeFolders = excludeFolders.components(separatedBy: kDefaultResourceSeparator)
+    static func config(excludeFolders: String, project: String) {
+        ResourceSettings.shared.setExcludeFolders(excludeFolders.components(separatedBy: kDefaultResourceSeparator), for: project)
     }
     
     /// 开始运行
     /// - Parameter enableSimilarMatch: 是否开启模糊匹配，暂时不推荐使用
     /// - Returns: 未使用的资源文件信息
-    static func run(enableSimilarMatch: Bool = false) -> [ResourceFileInfo] {
+    static func run(enableSimilarMatch: Bool = false, project: String) -> [ResourceFileInfo] {
         
         var unUsed: [ResourceFileInfo] = []
         // 重置扫描状态及产物
         ResourceFileSeacher.shared.reset()
         ResourceStringSeacher.shared.reset()
         //开始扫描文件列表
-        let resourceInfos = ResourceFileSeacher.shared.start(with: ResourceSettings.shared.projectPath ?? "",
-                                         excludeFolders:ResourceSettings.shared.excludeFolders ?? [],
-                                         resourceSuffixs: ResourceSettings.shared.resourceSuffixs ?? [])
+        let resourceInfos = ResourceFileSeacher.shared.start(with: ResourceSettings.shared.getProjectPath(about: project) ?? "",
+                                         excludeFolders:ResourceSettings.shared.getExcludeFolders(about: project) ?? [],
+                                         resourceSuffixs: ResourceSettings.shared.getResourceSuffixs(about: project) ?? [])
         // 开始扫描文件内容
-        ResourceStringSeacher.shared.start(with: ResourceSettings.shared.projectPath ?? "",
-                                           excludeFolders: ResourceSettings.shared.excludeFolders ?? [],
-                                           resourceSuffixs:  ResourceSettings.shared.resourceSuffixs ?? [],
-                                           resourcePatterns: ResourceSettings.shared.resourcePatterns ?? [])
+        ResourceStringSeacher.shared.start(with: ResourceSettings.shared.getProjectPath(about: project) ?? "",
+                                           excludeFolders: ResourceSettings.shared.getExcludeFolders(about: project) ?? [],
+                                           resourceSuffixs:  ResourceSettings.shared.getResourceSuffixs(about: project) ?? [],
+                                           resourcePatterns: ResourceSettings.shared.getResourcePatterns(about: project) ?? [])
         
         resourceInfos.forEach { element in
             

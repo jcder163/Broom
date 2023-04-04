@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CC3B580929D6E89100DDC819 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = CC3B580829D6E89100DDC819 /* ArgumentParser */; };
+		CC3B580C29DACDDF00DDC819 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = CC3B580B29DACDDF00DDC819 /* ArgumentParser */; };
 		CCD1813A29D40A4B00F74627 /* Broom.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD1813929D40A4B00F74627 /* Broom.swift */; };
 		CCD1814429D40AA800F74627 /* FileUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD1814329D40AA800F74627 /* FileUtils.swift */; };
 		CCD1814629D417F600F74627 /* StringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD1814529D417F600F74627 /* StringUtils.swift */; };
@@ -49,7 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CC3B580929D6E89100DDC819 /* ArgumentParser in Frameworks */,
+				CC3B580C29DACDDF00DDC819 /* ArgumentParser in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,7 +145,7 @@
 			);
 			name = Broom;
 			packageProductDependencies = (
-				CC3B580829D6E89100DDC819 /* ArgumentParser */,
+				CC3B580B29DACDDF00DDC819 /* ArgumentParser */,
 			);
 			productName = Broom;
 			productReference = CCD1813629D40A4B00F74627 /* Broom */;
@@ -176,7 +176,7 @@
 			);
 			mainGroup = CCD1812D29D40A4B00F74627;
 			packageReferences = (
-				CC3B580729D6E89100DDC819 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
+				CC3B580A29DACDDF00DDC819 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
 			);
 			productRefGroup = CCD1813729D40A4B00F74627 /* Products */;
 			projectDirPath = "";
@@ -326,6 +326,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 63T7Q59995;
 				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cocoa.broom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -337,6 +338,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 63T7Q59995;
 				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cocoa.broom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -366,7 +368,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		CC3B580729D6E89100DDC819 /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
+		CC3B580A29DACDDF00DDC819 /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-argument-parser.git";
 			requirement = {
@@ -377,9 +379,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CC3B580829D6E89100DDC819 /* ArgumentParser */ = {
+		CC3B580B29DACDDF00DDC819 /* ArgumentParser */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CC3B580729D6E89100DDC819 /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
+			package = CC3B580A29DACDDF00DDC819 /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
 			productName = ArgumentParser;
 		};
 /* End XCSwiftPackageProductDependency section */

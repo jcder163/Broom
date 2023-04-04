@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 let kSuffix2x: String = "@2x";
 let kSuffix3x: String = "@3x";
 
@@ -60,5 +59,4 @@ extension String {
         }
         return keyName
     }
- 
-}
+ }

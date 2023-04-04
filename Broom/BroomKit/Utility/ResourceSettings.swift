@@ -17,66 +17,54 @@ let kSettingsKeyMatchSimilarName: String = "MatchSimilarName"
 class ResourceSettings {
     
     static let shared: ResourceSettings = ResourceSettings()
-    
-    var projectPath: String? = ResourceSettings.getValue(for: kSettingsKeyProjectPath) as? String {
-        didSet {
-            ResourceSettings.set(value: projectPath, for: kSettingsKeyProjectPath)
-        }
-    }
-    
-    var excludeFolders: [String]? = ResourceSettings.getValue(for: kSettingsKeyExcludeFolders) as? [String] {
-        didSet {
-            ResourceSettings.set(value: excludeFolders, for: kSettingsKeyExcludeFolders)
-        }
-    }
-    
-    var resourceSuffixs: [String]? = ResourceSettings.getValue(for: kSettingsKeyResourceSuffixs) as? [String] {
-        didSet {
-            ResourceSettings.set(value: resourceSuffixs, for: kSettingsKeyResourceSuffixs)
-        }
-    }
-    
-    var resourcePatterns: [[String : Any]]? = ResourceSettings.getValue(for: kSettingsKeyResourcePatterns) as? [[String : Any]] {
-        didSet {
-            ResourceSettings.set(value: resourcePatterns, for: kSettingsKeyResourcePatterns)
-        }
-    }
-    var matchSimilarName: Int? = ResourceSettings.getValue(for: kSettingsKeyMatchSimilarName) as? Int {
-        didSet {
-            ResourceSettings.set(value: matchSimilarName, for: kSettingsKeyMatchSimilarName)
-        }
-    }
-    
-    
 }
 
 extension ResourceSettings {
-    func updateResourcePattern(atIndex: Int, withObj: Any?, forKey: String) {
-        guard let obj = withObj else { return }
-
-        let patterns: [[String : Any]] = self.resourcePatterns ?? []
-
-        if patterns.count > 0 && atIndex < patterns.count {
-            var pattern = patterns[atIndex]
-            pattern[forKey] = obj
-            self.resourcePatterns = patterns
-        }
+    
+    func setProjectPath(_ projectPath: String, for project: String) {
+        var dict = ResourceSettings.getValue(for: project) as? [String : Any] ?? [:]
+        dict[kSettingsKeyProjectPath] = projectPath
+        ResourceSettings.set(value: dict, for: project)
+        
+    }
+    func setExcludeFolders(_ excludeFolders: [String], for project: String) {
+        var dict = ResourceSettings.getValue(for: project) as? [String : Any] ?? [:]
+        dict[kSettingsKeyExcludeFolders] = excludeFolders
+        ResourceSettings.set(value: dict, for: project)
+        
+    }
+    func setResourceSuffixs(_ resourceSuffixs: [String], for project: String) {
+        var dict = ResourceSettings.getValue(for: project) as? [String : Any] ?? [:]
+        dict[kSettingsKeyResourceSuffixs] = resourceSuffixs
+        ResourceSettings.set(value: dict, for: project)
     }
     
-    func addResourcePattern(_ pattern: [String : Any]?) {
-        if let pattern = pattern {
-            var patterns: [[String : Any]] = self.resourcePatterns ?? []
-            patterns.insert(pattern, at: 0)
-            self.resourcePatterns = patterns
-        }
+    func setResourcePatterns(_ resourcePatterns: [[String : Any]], for project: String) {
+        var dict = ResourceSettings.getValue(for: project) as? [String : Any] ?? [:]
+        dict[kSettingsKeyResourcePatterns] = resourcePatterns
+        ResourceSettings.set(value: dict, for: project)
     }
     
-    func removeResourcePattern(atIndex: Int) {
-        var patterns: [[String : Any]] = self.resourcePatterns ?? []
-        if patterns.count > 0 && atIndex < patterns.count {
-            patterns.remove(at: atIndex)
-            self.resourcePatterns = patterns
-        }
+    
+    func getProjectPath(about project: String) -> String? {
+        let dict = ResourceSettings.getValue(for: project) as? [String : Any] ?? [:]
+        return dict[kSettingsKeyProjectPath] as? String
+        
+    }
+    func getExcludeFolders(about project: String) -> [String]? {
+        let dict = ResourceSettings.getValue(for: project) as? [String : Any] ?? [:]
+        return dict[kSettingsKeyExcludeFolders] as? [String]
+        
+        
+    }
+    func getResourceSuffixs(about project: String) -> [String]? {
+        let dict = ResourceSettings.getValue(for: project) as? [String : Any] ?? [:]
+        return dict[kSettingsKeyResourceSuffixs] as? [String]
+    }
+    
+    func getResourcePatterns(about project: String) -> [[String : Any]]? {
+        let dict = ResourceSettings.getValue(for: project) as? [String : Any] ?? [:]
+        return dict[kSettingsKeyResourcePatterns] as? [[String : Any]]
     }
 }
 
@@ -89,12 +77,10 @@ extension ResourceSettings {
     static func set(value: Any?, for key: String) {
         guard let value = value else { return }
         UserDefaults.standard.set(value, forKey: key)
-//        UserDefaults.standard.synchronize()
     }
     
     static func removeValue(for key: String) {
         UserDefaults.standard.removeObject(forKey: key)
-        //        UserDefaults.standard.synchronize()
     }
     
 }
